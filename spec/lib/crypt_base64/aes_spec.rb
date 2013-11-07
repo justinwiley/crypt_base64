@@ -3,6 +3,7 @@ require 'spec_helper'
 describe CryptBase64::AES do
   let(:plaintext) { 'False flag'}
   let(:cb){ CryptBase64::AES.new({data: plaintext}) }
+  let(:cipher) { OpenSSL::Cipher::AES.new(128, :CBC) }
 
   def assert_base64 *vals
     cb.check64 vals
@@ -32,14 +33,30 @@ describe CryptBase64::AES do
   end
 
   context 'encryption/decryption' do
-    it '#encrypt should return encrypted, base64 string' do
-      enc = cb.encrypt
-      assert_base64(enc)
-      cb.data = enc
+    it '#encrypt should return aes encrypted, base64 string that can be unencrypted use openssl aes with same key and iv' do
+      enc64 = cb.encrypt
+      assert_base64(enc64)
+
+      enc = Base64::decode64 enc64
+
+      cipher.decrypt
+      cipher.key = Base64::decode64 cb.key
+      cipher.iv = Base64::decode64 cb.iv
+      decrypted = cipher.update(enc) + cipher.final
+      decrypted.should == plaintext
+    end
+
+    it '#decrypt should decrypt openssl generated aes with same key and iv' do
+      cipher.encrypt
+      cipher.key = Base64::decode64 cb.key
+      cipher.iv = Base64::decode64 cb.iv
+      encrypted = cipher.update(plaintext) + cipher.final
+      
+      cb.data = encrypted
       cb.decrypt.should == plaintext
     end
 
-    it '#decrypt should return plaintext from encrypted, base64 string' do
+    it '#decrypt should seamlessly decrypt #encrypt output' do
       enc = cb.encrypt
       assert_base64(enc)
       cb.data = enc

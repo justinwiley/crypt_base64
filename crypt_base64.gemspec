@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = CryptBase64::VERSION
   spec.authors       = ["Justin Wiley"]
   spec.email         = ["justin.wiley@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{CryptBase64 wraps OpenSSL AES, serializing to and from Base64.}
+  spec.summary       = %q{CryptBase64 wraps OpenSSL AES, serializing to and from Base64.}
   spec.homepage      = ""
   spec.license       = "MIT"
 

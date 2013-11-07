@@ -24,12 +24,14 @@ http://www.ruby-doc.org/stdlib-2.0.0/libdoc/openssl/rdoc/OpenSSL/Cipher.html
 
 Initialization is a hash, it contains at a minimum data, which is either an encrypted base 64 string, or a plaintext string to be encrypted.
 
-    CryptBase64::AES.new data: 'false flag'
+    cb = CryptBase64::AES.new data: 'false flag'
 
 Other options include mode and bits, which mirror AES/OpenSSL's allowed encryption options.  By default 128 bits and CBC mode are assumed.
-Other modes may work but have not been tested.
+Other modes may work but have not been tested.  You can also include the symetric key and the IV.
 
-These attributes can be set or retrieved via setters/getters.
+    CryptBase64::AES.new data: 'false flag', key: 'base 64 key', iv: 'base 64 iv'
+
+These attributes can be set or retrieved via setters/getters.  Base64::strict_encode64 is used to avoid the puzzling newline thrown in by Base64::encode64.
 
 ### Encryption
 
